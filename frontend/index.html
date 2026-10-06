@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FaultTrace - PC Troubleshooting Expert System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/base.css">
+<link rel="stylesheet" href="/static/css/layout.css">
+<link rel="stylesheet" href="/static/css/components.css">
+<link rel="stylesheet" href="/static/css/views.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h5l3-7 4 14 3-7h5"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">FaultTrace</div>
+        <div class="brand-tag">PC expert system</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav" role="tablist" aria-label="Sections">
+        <button class="nav-item" role="tab" data-view="guided" aria-selected="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 4.5 2.6c-.9.5-1.6 1.2-1.6 2.4M12 17h.01"/></svg>
+          <span><span class="nav-title">Guided diagnosis</span><span class="nav-sub">Backward chaining</span></span>
+        </button>
+        <button class="nav-item" role="tab" data-view="checker" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span><span class="nav-title">Symptom checker</span><span class="nav-sub">Forward chaining</span></span>
+        </button>
+        <button class="nav-item" role="tab" data-view="kb" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span><span class="nav-title">Knowledge base</span><span class="nav-sub">Rules and facts</span></span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sidebar-foot">
+      <div class="engine-card">
+        <div class="engine-row"><span class="dot" id="engine-dot"></span><span id="engine-status">Connecting to engine...</span></div>
+        <p id="engine-detail">SWI-Prolog via FastAPI</p>
+      </div>
+      <p class="disclaimer">Guidance for common faults only. Unplug the PC before opening it and ask a technician about electrical faults.</p>
+    </div>
+  </aside>
+
+  <!-- ================= CONTENT ================= -->
+  <main class="content">
+
+    <!-- Guided diagnosis (backward chaining) -->
+    <section id="view-guided" class="view active" aria-labelledby="h-guided">
+      <header class="page-head">
+        <div>
+          <span class="eyebrow">Backward chaining</span>
+          <h2 id="h-guided">Guided diagnosis</h2>
+          <p>The system picks a possible fault and asks only the questions needed to prove it. Ask <em>why</em> at any question to see the rule being tested.</p>
+        </div>
+      </header>
+
+      <div class="split">
+        <div class="stack">
+          <div class="card question-card" id="question-card">
+            <div class="toolbar">
+              <label class="field">Look for
+                <select id="goal-select"><option value="any">Any fault</option></select>
+              </label>
+              <div class="step-meter" style="min-width:160px;flex:1;max-width:260px">
+                <span id="step-count">Question 1</span>
+                <div class="bar"><i id="step-bar"></i></div>
+              </div>
+            </div>
+
+            <div id="question-box">
+              <span class="tag q-category" id="q-category"></span>
+              <p class="q-text" id="q-text">Loading questions...</p>
+              <div class="answers">
+                <button class="answer-btn yes" data-answer="yes">Yes <kbd>Y</kbd></button>
+                <button class="answer-btn no" data-answer="no">No <kbd>N</kbd></button>
+                <button class="answer-btn unknown" data-answer="unknown">Don't know <kbd>D</kbd></button>
+              </div>
+              <button class="why-toggle" id="why-toggle" aria-expanded="false">Why are you asking this?</button>
+              <div class="why-box" id="why-box" hidden></div>
+            </div>
+          </div>
+
+          <div id="result-box" class="result-stack" hidden></div>
+        </div>
+
+        <aside class="card">
+          <div class="card-head">
+            <h3>Your answers</h3>
+            <div class="history-actions">
+              <button class="btn small ghost" id="undo-btn">Undo</button>
+              <button class="btn small ghost" id="restart-btn">Restart</button>
+            </div>
+          </div>
+          <ol id="answer-list" class="history-list"></ol>
+          <p id="answers-empty" class="muted">Answers appear here as you go.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Symptom checker (forward chaining) -->
+    <section id="view-checker" class="view" aria-labelledby="h-checker">
+      <header class="page-head">
+        <div>
+          <span class="eyebrow">Forward chaining</span>
+          <h2 id="h-checker">Symptom checker</h2>
+          <p>Mark everything you have observed. The system fires every rule it can until no new conclusion appears. Leave a symptom on <strong>?</strong> if you are unsure.</p>
+        </div>
+      </header>
+
+      <div id="symptom-groups" class="symptom-grid"></div>
+
+      <div class="run-bar">
+        <button class="btn primary" id="run-forward">Run diagnosis</button>
+        <button class="btn ghost" id="clear-forward">Clear all</button>
+        <span class="spacer"></span>
+        <span id="forward-count" class="muted"></span>
+      </div>
+
+      <div id="forward-result"></div>
+    </section>
+
+    <!-- Knowledge base -->
+    <section id="view-kb" class="view" aria-labelledby="h-kb">
+      <header class="page-head">
+        <div>
+          <span class="eyebrow">Loaded live from Prolog</span>
+          <h2 id="h-kb">Knowledge base</h2>
+          <p>Everything the system knows. Each rule lists the source it was taken from.</p>
+        </div>
+      </header>
+      <div id="kb-content"></div>
+    </section>
+
+  </main>
+</div>
+<script type="module" src="/static/js/main.js"></script>
+</body>
+</html>

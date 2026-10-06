@@ -1,0 +1,72 @@
+/* Design tokens, reset and typography */
+:root {
+  color-scheme: dark;
+  --bg: #0b0f17;
+  --bg-elev: #111827;
+  --surface: #151d2c;
+  --surface-2: #1b2538;
+  --line: #243149;
+  --line-soft: #1c2740;
+  --text: #e6ebf5;
+  --text-dim: #9aa8c2;
+  --text-faint: #6b7b98;
+
+  --accent: #22d3ee;
+  --accent-strong: #06b6d4;
+  --accent-soft: rgba(34, 211, 238, .12);
+  --violet: #a78bfa;
+
+  --yes: #34d399;
+  --yes-soft: rgba(52, 211, 153, .14);
+  --no: #fb7185;
+  --no-soft: rgba(251, 113, 133, .14);
+  --unk: #fbbf24;
+  --unk-soft: rgba(251, 191, 36, .14);
+
+  --sev-low: #34d399;
+  --sev-medium: #fbbf24;
+  --sev-high: #fb923c;
+  --sev-critical: #fb7185;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(34, 211, 238, .08), transparent 60%),
+    radial-gradient(700px 500px at -5% 105%, rgba(167, 139, 250, .07), transparent 60%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, p { margin: 0; }
+h2 { font-size: 1.6rem; letter-spacing: -.02em; }
+h3 { font-size: 1.02rem; letter-spacing: -.01em; }
+ol, ul { margin: 0; padding-left: 1.2rem; }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.muted { color: var(--text-dim); }
+.faint { color: var(--text-faint); }
+.mono { font-family: var(--mono); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
